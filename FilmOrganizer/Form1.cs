@@ -19,6 +19,7 @@ namespace FilmOrganizer
         public Form1()
         {
             InitializeComponent();
+            toolStripTextBox1.TextChanged += toolStripTextBox1_TextChanged;
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -241,9 +242,10 @@ namespace FilmOrganizer
                 || !File.Exists((string)Films.SelectedNode.Tag ) ||
                 !File.Exists(set.Dir)) return;
            
-            string dir = (string)Films.SelectedNode.Tag;
-            System.Diagnostics.Process.Start(set.Dir, dir);
-            
+            string dir = "\"" + (string)Films.SelectedNode.Tag + "\"";
+            //System.Diagnostics.Process.Start(set.Dir, dir);
+            System.Diagnostics.Process.Start(dir);
+
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -331,6 +333,20 @@ namespace FilmOrganizer
         {
             LoadLibraries();
             Films.Nodes.Clear();
+        }
+        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            string str = ((ToolStripTextBox)sender).Text.ToLower();
+            foreach (TreeNode parent in FilmLibrary.Nodes)
+                foreach (TreeNode child in parent.Nodes)
+                    if (str != "" && child.Text.ToLower().Contains(str))
+                    {
+                        child.BackColor = Color.Green;
+                    }
+                    else if (child.BackColor != SystemColors.ControlDarkDark)
+                    {
+                        child.BackColor = SystemColors.ControlDarkDark;
+                    }
         }
     }
 }
